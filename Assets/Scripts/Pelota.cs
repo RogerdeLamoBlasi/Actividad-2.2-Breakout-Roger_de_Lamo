@@ -59,12 +59,22 @@ public class Pelota : MonoBehaviour
                 Destroy(collision.gameObject);
             }
         }
+
+        // Si colisiona con la Zona de Muerte, destruye la pelota
+        if (collision.CompareTag("ZonaMuerte"))
+        {
+            Destroy(gameObject);
+        }
     }
 
+    // Genera una nueva pelota en el centro con una dirección aleatoria
     void Spawn()
     {
         transform.position = Vector3.zero;
-        velocidadX = Random.Range(-1f, 1f) * velocidad;
-        velocidadY = velocidad;
+        velocidadX = Random.Range(-1f, 1f);
+        velocidadY = 1f;
+        Vector2 dir = new Vector2(velocidadX, velocidadY).normalized;
+        velocidadX = dir.x * velocidad;
+        velocidadY = dir.y * velocidad;
     }
 }

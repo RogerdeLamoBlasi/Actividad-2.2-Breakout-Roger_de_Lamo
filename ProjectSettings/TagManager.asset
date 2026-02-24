@@ -8,6 +8,8 @@ TagManager:
   - Vertical
   - Pala
   - Block
+  - ZonaMuerte
+  - Pelota
   layers:
   - Default
   - TransparentFX
