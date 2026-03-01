@@ -10,6 +10,8 @@ public class Pelota : MonoBehaviour
 
     void Start()
     {
+        if (gm == null)
+            gm = Object.FindFirstObjectByType<GameManager>();
         // Inicia la pelota en el centro
         Spawn(); 
 
@@ -73,6 +75,22 @@ public class Pelota : MonoBehaviour
                     gm.ActualizarPuntos();
                 }
                 Destroy(collision.gameObject);
+
+                // 10% de probabilidad de soltar un power-up al destruir un bloque
+                if (Random.value <= 0.1f && gm != null && gm.prefabsPowerUp.Length > 0)
+                {
+                    int index = Random.Range(0, gm.prefabsPowerUp.Length);
+                    GameObject powerUpPrefab = gm.prefabsPowerUp[index];
+                    GameObject nuevo = Instantiate(powerUpPrefab, collision.transform.position, Quaternion.identity);
+
+                    // assignem el GM de manera explícita
+                    PowerUp pu = nuevo.GetComponent<PowerUp>();
+                    if (pu != null)
+                    {
+                        pu.tipo = (TipoPowerUp)index;
+                        pu.gm = gm; 
+                    }
+                }
             }
         }
 
@@ -84,7 +102,7 @@ public class Pelota : MonoBehaviour
     }
 
     // Genera una nueva pelota en el centro con una dirección aleatoria
-    void Spawn()
+    public void Spawn()
     {
         transform.position = new Vector3(0, -2, 0);
         velocidadX = Random.Range(-1, 1);
