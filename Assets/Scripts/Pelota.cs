@@ -6,10 +6,14 @@ public class Pelota : MonoBehaviour
     private float velocidadX;
     private float velocidadY;
 
+    public GameManager gm;
+
     void Start()
     {
         // Inicia la pelota en el centro
         Spawn(); 
+
+
     }
     void Update()
     {
@@ -31,8 +35,7 @@ public class Pelota : MonoBehaviour
         }
 
         // Rebote contra Pala o Bloque
-        if (collision.CompareTag("Pala") || collision.CompareTag("Block"))
-        {
+        if (collision.CompareTag("Pala") || collision.CompareTag("Block") || (collision.CompareTag("capa1") || collision.CompareTag("capa2") || collision.CompareTag("capa3") || collision.CompareTag("capa4") || collision.CompareTag("capa5") || collision.CompareTag("capa6")) ) {
             //Calcula la dirección de rebote basada en la posición relativa entre la pelota y el objeto colisionado
             float diffX = transform.position.x - collision.transform.position.x;
             float diffY = transform.position.y - collision.transform.position.y;
@@ -53,9 +56,22 @@ public class Pelota : MonoBehaviour
                 velocidadY = diffY * velocidad;
             }
 
-            // Si colisiona con un bloque, destruye el bloque
-            if (collision.CompareTag("Block"))
+            // Si colisiona con un bloque, destruye el bloque y suma puntos
+            if (collision.CompareTag("capa1") || collision.CompareTag("capa2") || collision.CompareTag("capa3") || collision.CompareTag("capa4") || collision.CompareTag("capa5") || collision.CompareTag("capa6"))
             {
+                if (gm != null)
+                {
+                    switch (collision.tag)
+                    {
+                        case "capa1": gm.puntuacion += 1; break;
+                        case "capa2": gm.puntuacion += 2; break;
+                        case "capa3": gm.puntuacion += 3; break;
+                        case "capa4": gm.puntuacion += 4; break;
+                        case "capa5": gm.puntuacion += 5; break;
+                        case "capa6": gm.puntuacion += 6; break;
+                    }
+                    gm.ActualizarPuntos();
+                }
                 Destroy(collision.gameObject);
             }
         }
@@ -70,9 +86,9 @@ public class Pelota : MonoBehaviour
     // Genera una nueva pelota en el centro con una dirección aleatoria
     void Spawn()
     {
-        transform.position = Vector3.zero;
-        velocidadX = Random.Range(-1f, 1f);
-        velocidadY = 1f;
+        transform.position = new Vector3(0, -2, 0);
+        velocidadX = Random.Range(-1, 1);
+        velocidadY = 1;
         Vector2 dir = new Vector2(velocidadX, velocidadY).normalized;
         velocidadX = dir.x * velocidad;
         velocidadY = dir.y * velocidad;

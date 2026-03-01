@@ -4,16 +4,19 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    public int puntuacion = 0;
     public int vidas = 3;
     public GameObject prefabPelota;
     public TextMeshProUGUI textoVidas;
+    public TextMeshProUGUI textoPuntuacion;
 
     // Evita que se procese la muerte varias veces antes de que se vuelva a generar una pelota
     private bool procesando = false;
 
     void Start()
     {
-        ActualizarTexto();
+        ActualizarVida();
+        ActualizarPuntos();
     }
 
     void Update()
@@ -23,12 +26,12 @@ public class GameManager : MonoBehaviour
         {
             procesando = true;
             vidas--;
-            ActualizarTexto();
+            ActualizarVida();
 
             // Si aún quedan vidas, genera una nueva pelota después de un breve retraso
             if (vidas > 0)
             {
-                Invoke("SpawnPelota", 1f);
+                Invoke("SpawnPelota", 1);
             }
             // Si no quedan vidas, reinicia la escena
             else
@@ -36,6 +39,16 @@ public class GameManager : MonoBehaviour
                 Debug.Log("GAME OVER");
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
+        }
+       //si no quedan blocques termina la partida
+        if (GameObject.FindGameObjectsWithTag("capa1").Length == 0 &&
+            GameObject.FindGameObjectsWithTag("capa2").Length == 0 &&
+            GameObject.FindGameObjectsWithTag("capa3").Length == 0 &&
+            GameObject.FindGameObjectsWithTag("capa4").Length == 0 &&
+            GameObject.FindGameObjectsWithTag("capa5").Length == 0 &&
+            GameObject.FindGameObjectsWithTag("capa6").Length == 0)
+        {
+            Debug.Log("¡ESAAAAA ES,Has ganado!");
         }
     }
 
@@ -47,9 +60,16 @@ public class GameManager : MonoBehaviour
     }
 
     // Actualiza el texto de vidas en la UI
-    void ActualizarTexto()
+    void ActualizarVida()
     {
         if (textoVidas != null)
             textoVidas.text = "Vidas: " + vidas;
     }
+    public void ActualizarPuntos()
+       {
+        if (textoPuntuacion != null)
+            textoPuntuacion.text = "Puntos: " + puntuacion;
+    }
+
 }
+
